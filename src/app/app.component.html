@@ -2,7 +2,9 @@
 
 <div class="container-fluid">
   <h2>Bootcamp Enrollment Form</h2>
-  <form #userForm="ngForm">
+  <form #userForm="ngForm" (ngSubmit)="onSubmit()" novalidate>
+
+    {{userForm.form.valid}}
 
     <!-- Example of ngModelGroup Example-->
     
@@ -68,10 +70,11 @@
     <br><br>
 
     <div class="form-group">
-      <select class="custom-select" name="topic" [(ngModel)]="userModel.topic">
-        <option value="">I am interested in</option> 
+      <select (blur)="validateTopic(topic.value)" (change)="validateTopic(topic.value)" required #topic="ngModel" class="custom-select" [class.is-invalid]="topicHasError && topic.touched" name="topic" [(ngModel)]="userModel.topic">
+        <option value="default">I am interested in</option> 
         <option *ngFor="let topic of topics">{{topic}}</option>
       </select>
+      <br>  <small class="text-danger" [class.d-none]="!topicHasError || topic.untouched">Please choose a topic</small>
     </div>
 
     <div class="mb-3">
@@ -92,7 +95,7 @@
       <label class="form-check-label">Send me promotional offers</label>
     </div>
 
-    <button class="btn btn-primary" type="submit">Submit</button>
+    <button [disabled]="userForm.form.invalid || topicHasError" class="btn btn-primary" type="submit">Submit</button>
 
   </form>
 </div>
